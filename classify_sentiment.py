@@ -4,14 +4,10 @@ import jieba
 import xlrd
 
 import random
-import string, re
+import re
 import codecs
 import os
-
 import numpy as np
-import theano
-import theano.tensor as T
-import gensim
 
 from keras.preprocessing import sequence
 from keras.models import Sequential
@@ -197,7 +193,7 @@ def train(max_len, embedding_dimension, dense_size, batch_size, epochs, train_pr
     model = Sequential()
     # model.add(LSTM(dense_size, input_shape = (max_len, embedding_dimension), dropout = 0.2))
     # TODO: Added sentimental dimension to the end
-    model.add(LSTM(dense_size, input_shape=(max_len, embedding_dimension + 1), dropout=0.2))
+    model.add(LSTM(dense_size, input_shape = (max_len, embedding_dimension + 1), dropout = 0.2))
     model.add(Dense(1, activation = 'sigmoid'))
 
     model.compile(loss = 'binary_crossentropy',
@@ -216,6 +212,9 @@ def train(max_len, embedding_dimension, dense_size, batch_size, epochs, train_pr
 
     model.save('sentiment_classification_model.h5')
     print('Model saved to "sentiment_classification_model.h5"')
+
+
+
 
 if __name__ == "__main__":
     train(max_len = 30,

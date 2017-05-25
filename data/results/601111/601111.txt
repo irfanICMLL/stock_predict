@@ -1,0 +1,31 @@
+Acc with emotion:
+0.6388888888888888 0.6203703703703703 
+
+Acc without emotion:
+0.6388888888888888 0.6388888888888888 
+
+Profit with emotion:
+1.4432286974064295 1.2267390163539933 
+
+Profit without emotion:
+1.1644620683484703 1.27554374707059 
+
+Profit absolute with emotion:
+1.7463091276177376 1.248935036495078 
+
+Profit absolute without emotion:
+1.1348205032935053 1.3676027222433378 
+
+Accuracy With Emotion Average 0.62962962963, stddev 0.00925925925926
+
+Accuracy Without Emotion Average 0.638888888889, stddev 0.0
+
+Profit With Emotion Average 1.33498385688, stddev 0.108244840526
+
+Profit Without Emotion Average 1.22000290771, stddev 0.0555408393611
+
+Profit Absolute With Emotion Average 1.49762208206, stddev 0.248687045561
+
+Profit Absolute Without Emotion Average 1.25121161277, stddev 0.116391109475
+
+Profit Without Trade: 1.1816993464052286

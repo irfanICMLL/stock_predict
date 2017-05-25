@@ -3,8 +3,8 @@
 import gensim
 
 def export_embedding():
-    model = gensim.models.Word2Vec.load('mymodel')
-    with open('data/embeddings.txt', 'w+') as f:
+    model = gensim.models.Word2Vec.load('mymodel1')
+    with open('data/embeddings2.txt', 'w+') as f:
         for word in model.index2word:
             f.write(word)
             f.write('\t')
