@@ -180,16 +180,16 @@ def train(stock_name, time_length, dense_size, batch_size, epochs, train_prop, n
     time_series, volatility_series, bullishness_series, num_of_comments_series, stock_price = \
         generate_series(stock_name, norm_window_size = norm_window_size)
 
-    # volatility_series = []
-    # bullishness_series = []
-    # num_of_comments_series = []
-    # file_name = os.path.join('data', 'series_new', stock_name + '.txt')
-    # with open(file_name, 'r') as f:
-    #     for line in f.readlines():
-    #         line = line.split('\t')
-    #         volatility_series.append(float(line[2]))
-    #         bullishness_series.append(float(line[1]))
-    #         num_of_comments_series.append(float(line[0]))
+    volatility_series = []
+    bullishness_series = []
+    num_of_comments_series = []
+    file_name = os.path.join('data', 'series_new', stock_name + '.txt')
+    with open(file_name, 'r') as f:
+        for line in f.readlines():
+            line = line.split('\t')
+            volatility_series.append(float(line[2]))
+            bullishness_series.append(float(line[1]))
+            num_of_comments_series.append(float(line[0]))
 
     (train_x, train_y), (test_x, test_y), stock_price_test, profit_without_trade = \
         preprocess_data(volatility_series, bullishness_series,
@@ -257,16 +257,16 @@ def train_without_emotion(stock_name, time_length, dense_size, batch_size, epoch
     time_series, volatility_series, bullishness_series, num_of_comments_series, stock_price = \
         generate_series(stock_name, norm_window_size = norm_window_size)
 
-    # volatility_series = []
-    # bullishness_series = []
-    # num_of_comments_series = []
-    # file_name = os.path.join('data', 'series_new', stock_name + '.txt')
-    # with open(file_name, 'r') as f:
-    #     for line in f.readlines():
-    #         line = line.split('\t')
-    #         volatility_series.append(float(line[2]))
-    #         bullishness_series.append(float(line[1]))
-    #         num_of_comments_series.append(float(line[0]))
+    volatility_series = []
+    bullishness_series = []
+    num_of_comments_series = []
+    file_name = os.path.join('data', 'series_new', stock_name + '.txt')
+    with open(file_name, 'r') as f:
+        for line in f.readlines():
+            line = line.split('\t')
+            volatility_series.append(float(line[2]))
+            bullishness_series.append(float(line[1]))
+            num_of_comments_series.append(float(line[0]))
 
     (train_x, train_y), (test_x, test_y), stock_price_test, profit_without_trade = \
         preprocess_data_without_emotion(volatility_series, bullishness_series,

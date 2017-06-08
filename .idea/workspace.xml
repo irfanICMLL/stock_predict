@@ -2,30 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ff11c2d-89a5-477f-9342-bb74018fe5e6" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/export_txt.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/601398.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/601668.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/000573.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/000703.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/000733.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/000788.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/000909.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/300017.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/300333.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/600362.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/server results/previous/601111.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/results/models without emotion/000573.hdf5" afterPath="$PROJECT_DIR$/data/results/models without emotion/000573.hdf5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/results/models without emotion/300333.hdf5" afterPath="$PROJECT_DIR$/data/results/models without emotion/300333.hdf5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/results/models/000573.hdf5" afterPath="$PROJECT_DIR$/data/results/models/000573.hdf5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/results/models/000703.hdf5" afterPath="$PROJECT_DIR$/data/results/models/000703.hdf5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/results/models/300333.hdf5" afterPath="$PROJECT_DIR$/data/results/models/300333.hdf5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/results/models/600605.hdf5" afterPath="$PROJECT_DIR$/data/results/models/600605.hdf5" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/stock_price.xlsx" afterPath="$PROJECT_DIR$/data/stock_price.xlsx" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/previous/300333.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generate_posneg_series.py" afterPath="$PROJECT_DIR$/generate_posneg_series.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/generate_series.py" afterPath="$PROJECT_DIR$/generate_series.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/predict_price.py" afterPath="$PROJECT_DIR$/predict_price.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/process_price_file.py" afterPath="$PROJECT_DIR$/process_price_file.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -53,8 +32,8 @@
       <file leaf-file-name="predict_price.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/predict_price.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2311">
-              <caret line="290" column="34" lean-forward="false" selection-start-line="290" selection-start-column="34" selection-end-line="290" selection-end-column="34" />
+            <state relative-caret-position="303">
+              <caret line="186" column="35" lean-forward="true" selection-start-line="186" selection-start-column="35" selection-end-line="186" selection-end-column="35" />
               <folding>
                 <element signature="e#25#34#0" expanded="true" />
               </folding>
@@ -141,9 +120,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -409,8 +388,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="873" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28040057" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28397712" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290653" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44174135" sideWeight="0.50500715" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28169015" sideWeight="0.49499285" order="2" side_tool="false" content_ui="tabs" />
@@ -788,8 +768,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/predict_price.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2311">
-          <caret line="290" column="34" lean-forward="false" selection-start-line="290" selection-start-column="34" selection-end-line="290" selection-end-column="34" />
+        <state relative-caret-position="303">
+          <caret line="186" column="35" lean-forward="true" selection-start-line="186" selection-start-column="35" selection-end-line="186" selection-end-column="35" />
           <folding>
             <element signature="e#25#34#0" expanded="true" />
           </folding>
