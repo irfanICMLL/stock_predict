@@ -46,7 +46,8 @@ stock2tableidx = {
     '600198' : 14,
     '600690' : 15,
     '601288' : 16,
-    '000043' : 17
+    '000043' : 17,
+    '399006' : 18
 }
 
 def generate_volatility_series(stock_name):
@@ -169,7 +170,7 @@ def generate_series(stock_name, norm_window_size):
 
 if __name__ == "__main__":
     norm_window_size = 20
-    stock_name = '000573'
+    stock_name = '600605'
 
     time_series, volatility_series, bullishness_series, num_of_comments_series, stock_price\
         = generate_series(stock_name, norm_window_size)

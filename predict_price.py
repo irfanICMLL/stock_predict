@@ -4,6 +4,7 @@ import os
 import warnings
 import numpy as np
 import matplotlib.pyplot as plt
+import copy
 
 import keras
 from generate_series import generate_series
@@ -28,6 +29,7 @@ def preprocess_data(volatility_series, bullishness_series, num_of_comments_serie
     assert len(volatility_series) == len(time_series)
     assert len(bullishness_series) == len(time_series)
     assert len(num_of_comments_series) == len(time_series)
+
 
     preprocessed_data = []
     flag = []
@@ -131,19 +133,23 @@ def preprocess_data_without_emotion(volatility_series, bullishness_series, num_o
     return (train_x, train_y), (test_x, test_y), stock_price_test, profit_without_trade
 
 def train(stock_name, time_length, dense_size, batch_size, epochs, train_prop, norm_window_size):
-
     # Read best model saved in the disk and return its accuracy
+    # global best_model
+    # global best_epoch
+    # best_model = None
+    # best_epoch = None
     def bestModelResult():
         model_path = os.path.join('data', 'results', 'models', stock_name + '.hdf5')
         model = load_model(model_path)
         flags = model.predict(test_x)
+        print(flags)
         assert len(test_y) == len(flags)
         numCorrect = 0
         for (a, b) in zip(flags, test_y):
             if a >= 0.5 and b == 1 or a < 0.5 and b == 0:
                 numCorrect += 1
         accuracy = float(numCorrect) / len(test_y)
-        profit = predict_profit(model, test_x, stock_price_test)
+        profit, mse = predict_profit(model, test_x, stock_price_test)
         profit_absolute, profit_absolute_list = predict_profit_absolute(model, test_x, stock_price_test)
         global acc_with_emotion_best_global
         global profit_absolute_with_emotion_best_global
@@ -152,7 +158,7 @@ def train(stock_name, time_length, dense_size, batch_size, epochs, train_prop, n
             acc_with_emotion_best_global = accuracy
             profit_absolute_with_emotion_best_global = profit_absolute_list
             stock_price_test_global = stock_price_test
-        return (accuracy, profit, profit_absolute)
+        return (accuracy, profit, profit_absolute, mse)
 
     # Setting up the network
     model = Sequential()
@@ -173,6 +179,18 @@ def train(stock_name, time_length, dense_size, batch_size, epochs, train_prop, n
 
     time_series, volatility_series, bullishness_series, num_of_comments_series, stock_price = \
         generate_series(stock_name, norm_window_size = norm_window_size)
+
+    # volatility_series = []
+    # bullishness_series = []
+    # num_of_comments_series = []
+    # file_name = os.path.join('data', 'series_new', stock_name + '.txt')
+    # with open(file_name, 'r') as f:
+    #     for line in f.readlines():
+    #         line = line.split('\t')
+    #         volatility_series.append(float(line[2]))
+    #         bullishness_series.append(float(line[1]))
+    #         num_of_comments_series.append(float(line[0]))
+
     (train_x, train_y), (test_x, test_y), stock_price_test, profit_without_trade = \
         preprocess_data(volatility_series, bullishness_series,
                         num_of_comments_series, time_series, time_length, train_prop, stock_price)
@@ -190,14 +208,16 @@ def train(stock_name, time_length, dense_size, batch_size, epochs, train_prop, n
     # profit = predict_profit(model, test_x, stock_price_test)
 
     print('Test score:', score)
-    acc, profit, profit_absolute = bestModelResult()
+    acc, profit, profit_absolute, mse = bestModelResult()
     print('Best Test Accuracy:', acc)
 
-    return acc, profit, profit_absolute, profit_without_trade
+    return acc, profit, profit_absolute, profit_without_trade, mse
 
 def train_without_emotion(stock_name, time_length, dense_size, batch_size, epochs, train_prop, norm_window_size):
     # Read best model saved in the disk and return its accuracy
     def bestModelResult():
+        best_model_path = os.path.join('data', 'results', 'models without emotion', stock_name + '.hdf5')
+        best_model = load_model(best_model_path)
         flags = best_model.predict(test_x)
         assert len(test_y) == len(flags)
         numCorrect = 0
@@ -205,7 +225,7 @@ def train_without_emotion(stock_name, time_length, dense_size, batch_size, epoch
             if a >= 0.5 and b == 1 or a < 0.5 and b == 0:
                 numCorrect += 1
         accuracy = float(numCorrect) / len(test_y)
-        profit = predict_profit(model, test_x, stock_price_test)
+        profit, mse = predict_profit(model, test_x, stock_price_test)
         profit_absolute, profit_absolute_list = predict_profit_absolute(model, test_x, stock_price_test)
 
         # Best-best model trained for this stock. save data for plotting
@@ -216,7 +236,7 @@ def train_without_emotion(stock_name, time_length, dense_size, batch_size, epoch
             acc_without_emotion_best_global = accuracy
             profit_absolute_without_emotion_best_global = profit_absolute_list
             stock_price_test_global = stock_price_test
-        return (accuracy, profit, profit_absolute)
+        return (accuracy, profit, profit_absolute, mse)
 
     # Setting up the network
     model = Sequential()
@@ -236,6 +256,18 @@ def train_without_emotion(stock_name, time_length, dense_size, batch_size, epoch
 
     time_series, volatility_series, bullishness_series, num_of_comments_series, stock_price = \
         generate_series(stock_name, norm_window_size = norm_window_size)
+
+    # volatility_series = []
+    # bullishness_series = []
+    # num_of_comments_series = []
+    # file_name = os.path.join('data', 'series_new', stock_name + '.txt')
+    # with open(file_name, 'r') as f:
+    #     for line in f.readlines():
+    #         line = line.split('\t')
+    #         volatility_series.append(float(line[2]))
+    #         bullishness_series.append(float(line[1]))
+    #         num_of_comments_series.append(float(line[0]))
+
     (train_x, train_y), (test_x, test_y), stock_price_test, profit_without_trade = \
         preprocess_data_without_emotion(volatility_series, bullishness_series,
                         num_of_comments_series, time_series, time_length, train_prop, stock_price)
@@ -253,14 +285,13 @@ def train_without_emotion(stock_name, time_length, dense_size, batch_size, epoch
     # profit = predict_profit(model, test_x, stock_price_test)
 
     print('Test score:', score)
-    best_model_path = os.path.join('data', 'results', 'models without emotion', stock_name + '.hdf5')
-    best_model = load_model(best_model_path)
-    acc, profit, profit_absolute = bestModelResult()
+    acc, profit, profit_absolute, mse = bestModelResult()
     print('Best Test Accuracy:', acc)
 
-    return acc, profit, profit_absolute, profit_without_trade
+    return acc, profit, profit_absolute, profit_without_trade, mse
 
 def predict_profit(model, test_x, stock_price):
+    # Calculate the profit for the stock
     assert len(test_x) + 1 == len(stock_price)
     flag = model.predict(test_x)
     profit = [0.0 for i in range(len(stock_price))]
@@ -271,7 +302,15 @@ def predict_profit(model, test_x, stock_price):
         else:
             profit[i] = profit[i - 1]
     print("Total Profit: %f" % profit[-1])
-    return profit[-1]
+    # Predict the stock as a regression task. Then calculate the mse
+    mse = 0
+    stock_price_predict = [0.0 for i in range(len(stock_price))]
+    stock_price_predict[0] = stock_price[0]
+    for i in range(1, len(stock_price)):
+        stock_price_predict[i] = stock_price[i - 1] * (1 + float(flag[i - 1]) / 5 - 0.1)
+        mse += ((stock_price_predict[i] - stock_price[i]) / stock_price[i]) ** 2
+    mse /= len(stock_price)
+    return (profit[-1], mse)
 
 def predict_profit_absolute(model, test_x, stock_price):
     assert len(test_x) + 1 == len(stock_price)
@@ -310,6 +349,8 @@ class ModelCheckpointModified(Callback):
         self.verbose = verbose
         self.best = -np.Inf
         self.model_saved = False
+        ModelCheckpointModified.best_model = None
+        ModelCheckpointModified.best_epoch = None
 
     def on_epoch_end(self, epoch, logs=None):
         logs = logs or {}
@@ -320,8 +361,14 @@ class ModelCheckpointModified(Callback):
                           'skipping.' % (self.monitor), RuntimeWarning)
         else:
             if current > self.best:
+                # print('Best Model Found at Epoch %d of acc %f!!!\n\n\n\n\n\n\n\n' % (epoch, current))
                 # Do not save underfit model for first n epochs
                 if self.model_saved == False or epoch >= 400:
+                    # global best_model
+                    # global best_epoch
+                    # ModelCheckpointModified.best_model = copy.deepcopy(self.model)
+                    # ModelCheckpointModified.best_epoch = epoch
+                    # print("Best Model of acc %f Saved\n\n\n\n\n\n\n\n\n" % current)
                     self.model.save(filepath, overwrite=True)
                     self.best = current
                     self.model_saved = True
@@ -362,124 +409,8 @@ profit_absolute_with_emotion_best_global = []
 acc_without_emotion_best_global = 0.0
 profit_absolute_without_emotion_best_global = []
 stock_price_test_global = []
-
-# Take same size of test set with/without emotion for plotting
-test_set_size = 0
-
-# if __name__ == "__main__":
-#
-#     stock_previous = [
-#                       '000573',
-#                       '000703',
-#                       '000733',
-#                       '000788',
-#                       '000909',
-#                       '300017',
-#                       '300333',
-#                       '600362',
-#                       '600605',
-#                       '601668']
-#
-#     stock_list = ['601398']
-#
-#     for stock_name in stock_list:
-#
-#         file_name = os.path.join('data', 'results', stock_name, '.'.join([stock_name, 'txt']))
-#         acc_with_emotion_list = []
-#         acc_without_emotion_list = []
-#         profit_with_emotion_list = []
-#         profit_without_emotion_list = []
-#         profit_with_emotion_absolute_list = []
-#         profit_without_emotion_absolute_list = []
-#         profit_without_trade = 0.0
-#
-#         acc_with_emotion_best_global = 0.0
-#         acc_without_emotion_best_global = 0.0
-#         iter = 5
-#         for iter_cnt in range(iter):
-#             print("Test %d with emotion" % (iter_cnt + 1))
-#             acc_with_emotion, profit_with_emotion, profit_with_emotion_absolute, profit_without_trade \
-#                 = train(stock_name = stock_name,
-#                   time_length = 8,
-#                   dense_size = 8,
-#                   batch_size = 32,
-#                   epochs = 10000,
-#                   train_prop = 0.80,
-#                   norm_window_size = 20)
-#             print("Test %d without emotion" % (iter_cnt + 1))
-#             acc_without_emotion, profit_without_emotion, profit_without_emotion_absolute, profit_without_trade \
-#                 = train_without_emotion(stock_name = stock_name,
-#                   time_length = 5,
-#                   dense_size = 4,
-#                   batch_size = 32,
-#                   epochs = 10000,
-#                   train_prop = 0.80,
-#                   norm_window_size = 20)
-#             acc_with_emotion_list.append(acc_with_emotion)
-#             acc_without_emotion_list.append(acc_without_emotion)
-#             profit_with_emotion_list.append(profit_with_emotion)
-#             profit_without_emotion_list.append(profit_without_emotion)
-#             profit_with_emotion_absolute_list.append(profit_with_emotion_absolute)
-#             profit_without_emotion_absolute_list.append(profit_without_emotion_absolute)
-#
-#             print("Accuracy:")
-#             print(acc_with_emotion_list)
-#             print(acc_without_emotion_list)
-#             print("\nProfit:")
-#             print(profit_with_emotion_list)
-#             print(profit_without_emotion_list)
-#             print('\nProfit Absolute:')
-#             print(profit_with_emotion_absolute_list)
-#             print(profit_without_emotion_absolute_list)
-#             print("\nAccuracy With Emotion Average %f, stddev %f" % (np.average(acc_with_emotion_list), np.std(acc_with_emotion_list)))
-#             print("\nAccuracy Without Emotion Average %f, stddev %f" % (np.average(acc_without_emotion_list), np.std(acc_without_emotion_list)))
-#             print("\nProfit With Emotion Average %f, stddev %f" % (np.average(profit_with_emotion_list), np.std(profit_with_emotion_list)))
-#             print("\nProfit Without Emotion Average %f, stddev %f" % (np.average(profit_without_emotion_list), np.std(profit_without_emotion_list)))
-#             print("\nProfit Absolute With Emotion Average %f, stddev %f" % (np.average(profit_with_emotion_absolute_list), np.std(profit_with_emotion_absolute_list)))
-#             print("\nProfit Absolute Without Emotion Average %f, stddev %f" % (np.average(profit_without_emotion_absolute_list), np.std(profit_without_emotion_absolute_list)))
-#             print("\nProfit Without Trade: %f" % profit_without_trade)
-#
-#             with open(file_name, 'w') as f:
-#                 f.write('Acc with emotion:\n')
-#                 for iter_cnt in range(len(acc_with_emotion_list)):
-#                     f.write(str(acc_with_emotion_list[iter_cnt]))
-#                     f.write(' ')
-#                 f.write('\n\nAcc without emotion:\n')
-#                 for iter_cnt in range(len(acc_without_emotion_list)):
-#                     f.write(str(acc_without_emotion_list[iter_cnt]))
-#                     f.write(' ')
-#                 f.write('\n\nProfit with emotion:\n')
-#                 for iter_cnt in range(len(profit_with_emotion_list)):
-#                     f.write(str(profit_with_emotion_list[iter_cnt]))
-#                     f.write(' ')
-#                 f.write('\n\nProfit without emotion:\n')
-#                 for iter_cnt in range(len(profit_without_emotion_list)):
-#                     f.write(str(profit_without_emotion_list[iter_cnt]))
-#                     f.write(' ')
-#                 f.write('\n\nProfit absolute with emotion:\n')
-#                 for iter_cnt in range(len(profit_with_emotion_absolute_list)):
-#                     f.write(str(profit_with_emotion_absolute_list[iter_cnt]))
-#                     f.write(' ')
-#                 f.write('\n\nProfit absolute without emotion:\n')
-#                 for iter_cnt in range(len(profit_without_emotion_absolute_list)):
-#                     f.write(str(profit_without_emotion_absolute_list[iter_cnt]))
-#                     f.write(' ')
-#                 f.write('\n\n')
-#                 f.write(''.join(["Accuracy With Emotion Average ", str(np.average(acc_with_emotion_list))
-#                         , ", stddev ", str(np.std(acc_with_emotion_list)), "\n\n"]))
-#                 f.write(''.join(["Accuracy Without Emotion Average ", str(np.average(acc_without_emotion_list))
-#                         , ", stddev ", str(np.std(acc_without_emotion_list)), "\n\n"]))
-#                 f.write(''.join(["Profit With Emotion Average ", str(np.average(profit_with_emotion_list))
-#                                     , ", stddev ", str(np.std(profit_with_emotion_list)), "\n\n"]))
-#                 f.write(''.join(["Profit Without Emotion Average ", str(np.average(profit_without_emotion_list))
-#                                     , ", stddev ", str(np.std(profit_without_emotion_list)), "\n\n"]))
-#                 f.write(''.join(["Profit Absolute With Emotion Average ", str(np.average(profit_with_emotion_absolute_list))
-#                                     , ", stddev ", str(np.std(profit_with_emotion_absolute_list)), "\n\n"]))
-#                 f.write(''.join(["Profit Absolute Without Emotion Average ", str(np.average(profit_without_emotion_absolute_list))
-#                                     , ", stddev ", str(np.std(profit_without_emotion_absolute_list)), "\n\n"]))
-#                 f.write('Profit Without Trade: ' + str(profit_without_trade))
-#
-#         plot_trend(stock_name)
+best_model = None
+best_epoch = None
 
 if __name__ == "__main__":
     stock_list_previous = [
@@ -489,10 +420,10 @@ if __name__ == "__main__":
         # '000788',
         # '000909',
         # '300017',
-        # '300333',
+        '300333',
         # '600362',
         # '601668',
-        '600605'
+        # '600605'
     ]
 
     stock_list = [
@@ -504,6 +435,7 @@ if __name__ == "__main__":
         # '600115',
         # '600000',
         # '000043'
+        # '399006'
     ]
 
     for stock in stock_list_previous:
@@ -512,50 +444,66 @@ if __name__ == "__main__":
         with open(file_name, 'w') as f:
             acc_wrt_range_with_emotion_list = []
             acc_wrt_range_without_emotion_list = []
-            for time_length in range(3, 5):
+            mse_wrt_range_with_emotion_list = []
+            mse_wrt_range_without_emotion_list = []
+            for time_length in range(10, 11):
                 accuracy_with_emotion_list = []
                 accuracy_without_emotion_list = []
-                for iter_cnt in range(2):
+                mse_with_emotion_list = []
+                mse_without_emotion_list = []
+                for iter_cnt in range(1):
                     print("Stock %s at length %d No.%d with emotion" % (stock, time_length, iter_cnt + 1))
-                    acc_with_emotion, profit_with_emotion, profit_with_emotion_absolute, profit_without_trade = train(
+                    acc_with_emotion, profit_with_emotion, profit_with_emotion_absolute, profit_without_trade, mse_with_emotion = train(
                         stock_name = stock,
                         time_length = time_length,
                         dense_size = 8,
                         batch_size = 32,
-                        epochs = 10000,
+                        epochs = 5000,
                         train_prop = 0.80,
                         norm_window_size = 20
                     )
                     print("Stock %s at length %d No.%d without emotion" % (stock, time_length, iter_cnt + 1))
-                    acc_without_emotion, profit_without_emotion, profit_without_emotion_absolute, profit_without_trade = train_without_emotion(
+                    acc_without_emotion, profit_without_emotion, profit_without_emotion_absolute, profit_without_trade, mse_without_emotion = train_without_emotion(
                         stock_name = stock,
                         time_length = time_length,
                         dense_size = 4,
                         batch_size = 32,
-                        epochs = 10000,
+                        epochs = 5000,
                         train_prop = 0.80,
                         norm_window_size = 20
                     )
                     accuracy_with_emotion_list.append(acc_with_emotion)
                     accuracy_without_emotion_list.append(acc_without_emotion)
+                    mse_with_emotion_list.append(mse_with_emotion)
+                    mse_without_emotion_list.append(mse_without_emotion)
                 acc_wrt_range_with_emotion_list.append(np.mean(accuracy_with_emotion_list))
                 acc_wrt_range_without_emotion_list.append(np.mean(accuracy_without_emotion_list))
+                mse_wrt_range_with_emotion_list.append(np.mean(mse_with_emotion_list))
+                mse_wrt_range_without_emotion_list.append(np.mean(mse_without_emotion_list))
                 f.write('Time Length: ')
                 f.write(str(time_length))
                 f.write('\nAcc with emotion: \n')
                 for num in accuracy_with_emotion_list:
-                    f.write(str(num) + ' ')
+                    f.write(str(num) + '\t')
                 f.write('\nAcc without emotion: \n')
                 for num in accuracy_without_emotion_list:
-                    f.write(str(num) + ' ')
-                f.write('\n\n')
+                    f.write(str(num) + '\t')
+                f.write('\nMSE with emotion: \n')
+                for num in mse_with_emotion_list:
+                    f.write(str(num) + '\t')
+                f.write('\nMSE without emotion: \n')
+                for num in mse_without_emotion_list:
+                    f.write(str(num) + '\t')
+                f.write('\n')
             f.write('Average Accuracy With Emotion:\n')
             for num in acc_wrt_range_with_emotion_list:
-                f.write(str(num) + ' ')
+                f.write(str(num) + '\t')
             f.write('\nAverage Accuracy Without Emotion:\n')
             for num in acc_wrt_range_without_emotion_list:
-                f.write(str(num) + ' ')
-
-
-
-
+                f.write(str(num) + '\t')
+            f.write('\nAverage MSE With Emotion:\n')
+            for num in mse_wrt_range_with_emotion_list:
+                f.write(str(num) + '\t')
+            f.write('\nAverage MSE Without Emotion:\n')
+            for num in mse_wrt_range_without_emotion_list:
+                f.write(str(num) + '\t')

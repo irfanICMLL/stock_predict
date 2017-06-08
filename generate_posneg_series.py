@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from keras.models import load_model
 from datetime import date
 import xlrd
@@ -180,7 +179,10 @@ if __name__ == "__main__":
                      # '601288.xls',
                      # '601288_2.xls',
                      # '000043.xls',
-                     '600605.xls'
+                     # '600605.xls',
+                    '399006_1.xls',
+                    '399006_2.xls',
+                    '399006_3.xls'
                     ]
     results_list = [
                     # '000573.txt',
@@ -201,7 +203,10 @@ if __name__ == "__main__":
                     # '601288.txt',
                     # '601288_2.txt',
                     # '000043.txt',
-                    '600605.txt'
+                    # '600605.txt',
+                    '399006_1.txt',
+                    '399006_2.txt',
+                    '399006_3.txt'
                     ]
     for(comment_dir, result_dir) in zip(comments_list, results_list):
         generate_posneg_series(os.path.join('data/stock_comments', comment_dir),

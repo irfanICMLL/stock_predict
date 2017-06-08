@@ -56,4 +56,4 @@ def process_price_file(stock_name):
 
 
 if __name__ == "__main__":
-    process_price_file('000043')
+    process_price_file('399006')
