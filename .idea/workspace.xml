@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4ff11c2d-89a5-477f-9342-bb74018fe5e6" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/data/results/parameter_sweep/previous/300333.txt" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/predict_price.py" afterPath="$PROJECT_DIR$/predict_price.py" />
-    </list>
+    <list default="true" id="4ff11c2d-89a5-477f-9342-bb74018fe5e6" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
